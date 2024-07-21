@@ -1,0 +1,27 @@
+ [
+    {
+      "id": 1,
+      "image": "/assets/products/p1.jpg",
+      "name": "Arch Fit - 1 - Modern Rhythm",
+      "mrp": 5499,
+      "sellingPrice": 399,
+      "assuredImage": "/assets/logo/assured.png",
+      "description": "Product description for Modern Rhythm...",
+      "sizes": ["6", "7", "8", "9", "10", "11"],
+      "variant": "Select Size",
+      "carousel_images": ["/assets/products/p1.jpg", "/assets/products/p1.jpg", "/assets/products/p1.jpg"]
+    },
+    {
+      "id": 2,
+      "image": "/assets/products/p1.jpg",
+      "name": "Arch Fit - Modern Style",
+      "mrp": 4999,
+      "sellingPrice": 749,
+      "assuredImage": "/assets/logo/assured.png",
+      "description": "Product description for Modern Style...",
+      "sizes": ["7", "8", "9", "10", "11", "12"],
+      "variant": "Select Size",
+      "carousel_images": ["/assets/products/p1.jpg", "/assets/products/p1.jpg", "/assets/products/p1.jpg"]
+    }
+  ]
+  

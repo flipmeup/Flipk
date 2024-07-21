@@ -1,0 +1,78 @@
+/* ProductsList.css */
+
+.products-list {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    background-color: #fff;
+}
+
+.products-list h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    font-weight: bold;
+}
+
+table td {
+color: black; 
+font-weight: bold;   vertical-align: middle;
+}
+
+table img {
+    max-width: 100px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+
+@media screen and (max-width: 600px) {
+    table th, table td {
+        padding: 8px;
+    }
+    
+    table img {
+        max-width: 80px;
+    }
+}
+table th {
+    background-color: #677bc4;
+    font-weight: bold;
+}
+
+.products-list td button {
+    padding: 0.5rem 1rem;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.products-list td button:hover {
+    background-color: #df3730;
+}
+
+.products-list td button:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #f44336;
+}

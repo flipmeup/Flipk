@@ -1,0 +1,62 @@
+  nav .upper{
+   display: flex;
+   align-items: center;
+   background-color: rgb(40, 116, 240) ;
+   justify-content: space-between;
+   padding: .8rem 1rem;
+
+}
+nav i{
+    color: white;
+    font-size: 18px;
+}
+
+nav .leftNav{
+    background-color: rgb(40, 116, 240);
+    width: 65%; 
+    display: flex;
+    align-items: center;
+    gap:10px
+}
+nav .leftNav i{
+    color: white;
+}
+nav .leftNav img{
+    width: 85px;
+}
+nav .rightNav{
+    position: relative;
+}
+
+nav .rightNav #counter{
+    background: #d32f2f;
+    border-radius: 50%;
+    color: #fff;
+    height: 15px;
+    width: 15px;
+    position: absolute;
+    top: -6px;
+    left: 10px;
+    font-size: 8px;
+    text-align: center;
+    line-height: 12.5px;
+    border: 2px solid #fff;
+}
+
+.lower{
+    width: 100%;
+    background-color:rgb(40, 116, 240) ;
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.lower input{
+    width: 95%;
+    padding: .5rem .6rem;
+    border: none;
+    outline: none; /* Remove default outline */
+
+
+}

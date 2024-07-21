@@ -1,0 +1,141 @@
+/* AdminPanel.css */
+.admin-panel {
+    display: flex;
+    height: 100vh;
+    background-color: #202124;
+    color: #ffffff;
+}
+
+.sidebar {
+    width: 300px;
+    background-color: #2c2f33;
+    padding: 20px;
+}
+
+.main-content {
+    flex: 1;
+
+    padding: 20px;
+    overflow-y: auto; /* Allows main content to scroll if needed */
+}
+
+
+.add-product-form {
+    background-color: #fff;
+    color:black;
+    padding: 20px;
+    border-radius: 8px;
+    width: 95%;    font-weight: 700;
+
+    margin: 0 auto; /* Centers the form horizontally */
+}
+.add-product-form h2{
+    background-color: #677bc4;
+    color: white;
+    padding:.5rem 0;
+    text-align: center;
+}
+
+.change-upi-form{
+    background-color: #fff;
+    color: black;
+    font-weight: 800;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    margin: 0 auto; /* Centers the form horizontally */
+
+}
+.change-upi-form th{
+    color:white;
+    }
+
+.change-upi-form h2{
+    background-color: #677bc4;
+    color: white;
+    padding:.5rem 0;
+    text-align: center;
+}
+.full-width-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #555;
+    background-color: #424549;
+    color: #ffffff;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.submit-btn {
+    width: 30%;
+    position: relative;
+    font-weight: 700;
+
+    padding: 10px;
+    background-color: #7289da;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #677bc4;
+}
+
+label{
+    margin: 0px 20px;
+}
+.content h1{
+    text-align: center;
+    margin-bottom: 20px;
+
+}
+.content {
+
+    width: calc(100% - 300px);
+
+}
+.sidebar button {
+    width: 100%; /* Full width of parent container */
+    padding: 12px 20px; /* Padding inside button */
+    background-color: #7289da; /* Primary button color */
+    color: #ffffff; /* Text color */
+    border: none; /* Removes default border */
+    border-radius: 4px; /* Rounded corners */
+    margin-bottom: 10px; /* Spacing between buttons */
+    cursor: pointer; /* Pointer cursor on hover */
+    transition: background-color 0.3s ease; /* Smooth background color transition */
+}
+
+/* Button hover state */
+.sidebar button:hover {
+    background-color: #677bc4; /* Darker shade on hover */
+}
+
+/* Active button style */
+.sidebar button.active {
+    background-color: #5f73a9; /* Slightly darker color for active button */
+}
+
+/* Button text alignment */
+.sidebar button {
+    text-align: left; /* Aligns text to the left within button */
+    font-size: 16px; /* Font size for button text */
+    font-weight: bold; /* Bold font weight */
+}
+
+/* Link styling within buttons */
+.sidebar button a {
+    text-decoration: none; /* Removes underline from links */
+    color: #ffffff; /* Text color for links */
+}
+
+/* Link hover state */
+.sidebar button a:hover {
+    text-decoration: underline; /* Underline on hover */
+    color: #ffffff; /* Text color on hover */
+}

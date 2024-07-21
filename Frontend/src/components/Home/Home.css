@@ -1,0 +1,62 @@
+main .category
+{
+
+    max-width: 100%;
+    height: auto;
+}
+
+main .banner{
+
+   width: 100%;
+    height: auto;
+}
+
+
+main .timer
+{    padding-top: .8rem;
+
+    display: flex;
+
+
+}
+main .timer .left{
+    
+    width:70% ;
+    color: #2873ee;
+    font-size: 16px;
+}
+main .timer .left .upper{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+main .timer .left .lower{
+    padding-top: .4rem;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+main .timer .left .lower #timer{
+    font-size: 20px;
+}
+
+
+main .timer .right{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+main .timer .right #sale{
+
+background: #fff;
+color: red;
+padding: 10px 12px;
+font-size: 12px;
+border-radius: 4px;
+border: none;
+text-transform: inherit;
+box-shadow: 0 1px 2px 0 rgba(0, 0, 0, .16);
+cursor: pointer;
+
+}

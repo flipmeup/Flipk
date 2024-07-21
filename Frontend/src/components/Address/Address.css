@@ -1,0 +1,66 @@
+.card-body {
+    flex: 1 1 auto;
+    padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+    color: var(--bs-card-color);
+}
+
+.form-floating>.form-control, .form-floating>.form-control-plaintext, .form-floating>.form-select {
+    height: calc(3rem + calc(var(--bs-border-width)* 2));
+    min-height:calc(2.5rem + calc(var(--bs-border-width)* 2));
+    line-height: 1.25;
+}
+#state{
+    height: calc(3.5rem + calc(var(--bs-border-width)* 2));
+    min-height:calc(2.5rem + calc(var(--bs-border-width)* 2));
+    line-height: 1.25;
+}
+
+.form-floating > label {
+    position: absolute;
+    top: -5px;
+    left: -26px;
+    z-index: 2;
+    padding: 1rem .75rem;
+    overflow: hidden;
+    text-align: start;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    pointer-events: none;
+    border: 1px solid transparent;
+    transform-origin: 0 0;
+    transition: opacity .1s ease-in-out, transform .1s ease-in-out;
+    font-size: 14px;
+    font-family: Roboto, Droid Sans, Helvetica Neue, Arial, Helvetica, sans-serif;
+    color: #878787;
+}
+
+
+.form-control {
+    height: 38px; /* Adjust the height of input fields */
+}
+
+.form-select {
+    height: 38px; /* Adjust the height of select fields */
+}
+
+.common-button {
+    background: #fb641b;
+    position: relative;
+    overflow: hidden;
+    border-radius: .2rem;
+    width: 100%; /* Make the button full width */
+    height: 50px; /* Adjust the height of the button */
+    border: 1px solid #e88406;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.row > * {
+    padding-right: calc(var(--bs-gutter-x) * .5);
+    padding-left: 0;
+}

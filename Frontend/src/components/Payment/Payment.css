@@ -1,0 +1,84 @@
+.card {
+    --bs-card-spacer-y: 1rem;
+    --bs-card-spacer-x: 1rem;
+    --bs-card-title-spacer-y: 0.5rem;
+    --bs-card-title-color: ;
+    --bs-card-subtitle-color: ;
+    --bs-card-border-width: var(--bs-border-width);
+    --bs-card-border-color: var(--bs-border-color-translucent);
+    --bs-card-border-radius: var(--bs-border-radius);
+    --bs-card-box-shadow: ;
+    --bs-card-inner-border-radius: calc(var(--bs-border-radius) - (var(--bs-border-width)));
+    --bs-card-cap-padding-y: 0.5rem;
+    --bs-card-cap-padding-x: 1rem;
+    --bs-card-cap-bg: rgba(var(--bs-body-color-rgb),0.03);
+    --bs-card-cap-color: ;
+    --bs-card-height: ;
+    --bs-card-color: ;
+    --bs-card-bg: var(--bs-body-bg);
+    --bs-card-img-overlay-padding: 1rem;
+    --bs-card-group-margin: 0.75rem;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    height: var(--bs-card-height);
+    color: var(--bs-body-color);
+    word-wrap: break-word;
+    background-color: var(--bs-card-bg);
+    background-clip: border-box;
+    border: var(--bs-card-border-width) solid var(--bs-card-border-color);
+    border-radius: var(--bs-card-border-radius);
+}
+.card {
+    --bs-border-color-translucent: rgba(0,0,0,.125) !important;
+    --bs-border-radius: 0.25rem !important;
+}.offerend-container {
+    text-align: center;
+    font-weight: 700;
+    padding: 14px;
+}.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: .5rem;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--bs-heading-color);
+}
+.form-check.active {
+    border-color: #367dfb;
+}.form-check label.form-check-label {
+    font-size: 23px;
+    display: flex;
+    align-items: center;
+    padding: 15px;
+}.form-check.available-method span {
+    font-size: 18px;
+    margin-left: 13px;
+}
+.pay-logo{
+    max-width: 45px;
+    vertical-align: middle;
+}
+.product-price-list {
+    display: flex;
+    justify-content: space-between;
+}price-list .title {
+    font-size: 14px;
+}.product-price-list .data, .product-price-list .title {
+    font-size: 14px;
+}.product-price-list.total {
+    border-top: 1px dashed #eee;
+}
+
+.form-check {
+    font-size: 20px;
+    border: 1px solid #ccc;
+    margin-bottom: 11px;
+    border-radius: 10px;
+  
+        padding-left: 0;
+}
+
+#easy{
+    margin-bottom: 80px;
+}
