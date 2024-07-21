@@ -1,7 +1,8 @@
-import React, { useState, useEffect, useRef } from 'react';
+ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import './ProductList.css'; // Import your ProductsList.css file
+import './ProductList.css';
 import ConfirmationModal from './ConfirmationModal';
+import apiUrl from '../../config';
 
 const ProductsList = () => {
     const [products, setProducts] = useState([]);
@@ -9,12 +10,13 @@ const ProductsList = () => {
     const [editField, setEditField] = useState({});
     const [showConfirm, setShowConfirm] = useState(false);
     const [confirmAction, setConfirmAction] = useState(null);
-    const inputRef = useRef(null);
+    const [confirmMessage, setConfirmMessage] = useState('');
+    const formRef = useRef(null);
 
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/products');
+                const response = await axios.get(`${apiUrl}/api/products`);
                 setProducts(response.data);
             } catch (error) {
                 console.error('Error fetching products:', error);
@@ -26,7 +28,7 @@ const ProductsList = () => {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (inputRef.current && !inputRef.current.contains(event.target)) {
+            if (formRef.current && !formRef.current.contains(event.target)) {
                 setEditProductId(null);
                 setEditField({});
             }
@@ -36,69 +38,100 @@ const ProductsList = () => {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [inputRef]);
+    }, [formRef]);
 
-    const confirmUpdate = (productId, field, value) => {
-        setConfirmAction(() => () => handleEdit(productId, field, value));
-        setShowConfirm(true);
-    };
-
-    const handleEdit = async (productId, field, value) => {
-        setShowConfirm(false);
-        setEditProductId(null);
-        setEditField({});
-        const updatedProducts = products.map(product => {
-            if (product.id === productId) {
-                return {
-                    ...product,
-                    [field]: value
-                };
-            }
-            return product;
-        });
-        setProducts(updatedProducts);
-
+    const confirmUpdate = async (productId) => {
         try {
-            await axios.put(`http://localhost:3000/api/products/${productId}`, {
-                [field]: value
-            });
+            console.log('Updating product with:', editField); // Log the editField object
+            const updatedProduct = await axios.put(`${apiUrl}/api/products/${productId}`, editField);
+            const updatedProducts = products.map(product => (
+                product.id === productId ? updatedProduct.data : product
+            ));
+            setProducts(updatedProducts);
+            setEditProductId(null);
+            setEditField({});
+            setShowConfirm(false); // Close the confirmation modal on successful update
         } catch (error) {
             console.error('Error updating product:', error);
         }
     };
 
-    const confirmDelete = (productId) => {
-        setConfirmAction(() => () => handleDelete(productId));
-        setShowConfirm(true);
-    };
-
-    const handleDelete = async (productId) => {
-        setShowConfirm(false);
+    const confirmDelete = async (productId) => {
         try {
-            await axios.delete(`http://localhost:3000/api/products/${productId}`);
+            await axios.delete(`${apiUrl}/api/products/${productId}`);
             const updatedProducts = products.filter(product => product.id !== productId);
             setProducts(updatedProducts);
+            setShowConfirm(false); // Close the confirmation modal on successful delete
         } catch (error) {
             console.error('Error deleting product:', error);
         }
     };
 
-    const startEditing = (productId, field, value) => {
+    const startEditing = (productId) => {
         setEditProductId(productId);
-        setEditField({ [field]: value });
+        const productToEdit = products.find(product => product.id === productId);
+        // Ensure sizes is initialized as an array
+        setEditField({
+            ...productToEdit,
+            sizes: Array.isArray(productToEdit.sizes) ? [...productToEdit.sizes] : []
+        });
     };
 
-    const handleInputChange = (field, value) => {
-        setEditField(prevState => ({
-            ...prevState,
-            [field]: value
-        }));
-    };
-
-    const handleKeyDown = (event, productId, field, value) => {
-        if (event.key === 'Enter') {
-            confirmUpdate(productId, field, value);
+    const handleInputChange = (event, field) => {
+        const { value } = event.target;
+        if (field.startsWith('carousel_images')) {
+            const index = parseInt(field.split('[')[1].split(']')[0], 10);
+            setEditField(prevState => {
+                const updatedCarouselImages = [...prevState.carousel_images];
+                updatedCarouselImages[index] = value;
+                return {
+                    ...prevState,
+                    carousel_images: updatedCarouselImages
+                };
+            });
+        } else if (field === 'sizes') {
+            setEditField(prevState => ({
+                ...prevState,
+                sizes: value.split(',').map(item => item.trim())
+            }));
+        } else {
+            setEditField(prevState => ({
+                ...prevState,
+                [field]: value
+            }));
         }
+    };
+    
+
+    const handleKeyDown = (event, productId) => {
+        if (event.key === 'Enter') {
+            openConfirmModal(productId);
+        }
+    };
+
+    const handleColorChange = (event, idx, field) => {
+        const { value } = event.target;
+        setEditField(prevState => {
+            const updatedColors = [...prevState.colors];
+            updatedColors[idx] = {
+                ...updatedColors[idx],
+                [field]: value
+            };
+            return {
+                ...prevState,
+                colors: updatedColors
+            };
+        });
+    };
+
+    const openConfirmModal = (productId) => {
+        setConfirmMessage('Are you sure you want to save these changes?');
+        setConfirmAction(() => () => confirmUpdate(productId));
+        setShowConfirm(true);
+    };
+
+    const stopPropagation = (event) => {
+        event.stopPropagation();
     };
 
     return (
@@ -107,148 +140,146 @@ const ProductsList = () => {
             <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
+                        <th>S.No</th>
                         <th>Image</th>
                         <th>Name</th>
-                        <th>M.R.P</th>
-                        <th>S.P.</th>
-                        <th>Description</th>
-                        <th>Sizes</th>
-                        <th>Variant</th>
-                        <th>Actions</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {products.map(product => (
-                        <tr key={product.id}>
-                            <td>{product.id}</td>
-                            <td>
-                                {editProductId === product.id && editField.hasOwnProperty('image') ? (
-                                    <input
-                                        type="text"
-                                        value={editField.image}
-                                        ref={inputRef}
-                                        onChange={(e) => handleInputChange('image', e.target.value)}
-                                        onBlur={() => confirmUpdate(product.id, 'image', editField.image)}
-                                        onKeyDown={(e) => handleKeyDown(e, product.id, 'image', editField.image)}
-                                    />
-                                ) : (
+                    {products.map((product, index) => (
+                        <React.Fragment key={product.id}>
+                            <tr>
+                                <td>{index + 1}</td>
+                                <td>
                                     <img
                                         src={product.image}
                                         alt={product.name}
                                         height="50"
-                                        onDoubleClick={() => startEditing(product.id, 'image', product.image)}
                                     />
-                                )}
-                            </td>
-                            <td>
-                                {editProductId === product.id && editField.hasOwnProperty('name') ? (
-                                    <input
-                                        type="text"
-                                        value={editField.name}
-                                        ref={inputRef}
-                                        onChange={(e) => handleInputChange('name', e.target.value)}
-                                        onBlur={() => confirmUpdate(product.id, 'name', editField.name)}
-                                        onKeyDown={(e) => handleKeyDown(e, product.id, 'name', editField.name)}
-                                    />
-                                ) : (
-                                    <span onDoubleClick={() => startEditing(product.id, 'name', product.name)}>
-                                        {product.name}
-                                    </span>
-                                )}
-                            </td>
-                            <td>
-                                {editProductId === product.id && editField.hasOwnProperty('mrp') ? (
-                                    <input
-                                        type="number"
-                                        value={editField.mrp}
-                                        ref={inputRef}
-                                        onChange={(e) => handleInputChange('mrp', e.target.value)}
-                                        onBlur={() => confirmUpdate(product.id, 'mrp', parseFloat(editField.mrp))}
-                                        onKeyDown={(e) => handleKeyDown(e, product.id, 'mrp', parseFloat(editField.mrp))}
-                                    />
-                                ) : (
-                                    <span onDoubleClick={() => startEditing(product.id, 'mrp', product.mrp)}>
-                                        {product.mrp}
-                                    </span>
-                                )}
-                            </td>
-                            <td>
-                                {editProductId === product.id && editField.hasOwnProperty('sellingPrice') ? (
-                                    <input
-                                        type="number"
-                                        value={editField.sellingPrice}
-                                        ref={inputRef}
-                                        onChange={(e) => handleInputChange('sellingPrice', e.target.value)}
-                                        onBlur={() => confirmUpdate(product.id, 'sellingPrice', parseFloat(editField.sellingPrice))}
-                                        onKeyDown={(e) => handleKeyDown(e, product.id, 'sellingPrice', parseFloat(editField.sellingPrice))}
-                                    />
-                                ) : (
-                                    <span onDoubleClick={() => startEditing(product.id, 'sellingPrice', product.sellingPrice)}>
-                                        {product.sellingPrice}
-                                    </span>
-                                )}
-                            </td>
-                            <td>
-                                {editProductId === product.id && editField.hasOwnProperty('description') ? (
-                                    <input
-                                        type="text"
-                                        value={editField.description}
-                                        ref={inputRef}
-                                        onChange={(e) => handleInputChange('description', e.target.value)}
-                                        onBlur={() => confirmUpdate(product.id, 'description', editField.description)}
-                                        onKeyDown={(e) => handleKeyDown(e, product.id, 'description', editField.description)}
-                                    />
-                                ) : (
-                                    <span onDoubleClick={() => startEditing(product.id, 'description', product.description)}>
-                                        {product.description}
-                                    </span>
-                                )}
-                            </td>
-                            <td>
-                                {editProductId === product.id && editField.hasOwnProperty('sizes') ? (
-                                    <input
-                                        type="text"
-                                        value={editField.sizes}
-                                        ref={inputRef}
-                                        onChange={(e) => handleInputChange('sizes', e.target.value)}
-                                        onBlur={() => confirmUpdate(product.id, 'sizes', editField.sizes.split(',').map(item => item.trim()))}
-                                        onKeyDown={(e) => handleKeyDown(e, product.id, 'sizes', editField.sizes.split(',').map(item => item.trim()))}
-                                    />
-                                ) : (
-                                    <span onDoubleClick={() => startEditing(product.id, 'sizes', product.sizes.join(', '))}>
-                                        {product.sizes.join(', ')}
-                                    </span>
-                                )}
-                            </td>
-                            <td>
-                                {editProductId === product.id && editField.hasOwnProperty('variant') ? (
-                                    <input
-                                        type="text"
-                                        value={editField.variant}
-                                        ref={inputRef}
-                                        onChange={(e) => handleInputChange('variant', e.target.value)}
-                                        onBlur={() => confirmUpdate(product.id, 'variant', editField.variant)}
-                                        onKeyDown={(e) => handleKeyDown(e, product.id, 'variant', editField.variant)}
-                                    />
-                                ) : (
-                                    <span onDoubleClick={() => startEditing(product.id, 'variant', product.variant)}>
-                                        {product.variant}
-                                    </span>
-                                )}
-                            </td>
-                            <td>
-                                <button onClick={() => confirmDelete(product.id)}>Delete</button>
-                            </td>
-                        </tr>
+                                </td>
+                                <td>{product.name}</td>
+                                <td>
+                                    <button onClick={() => startEditing(product.id)}>Edit</button>
+                                </td>
+                                <td>
+                                    <button onClick={() => {
+                                        setConfirmMessage('Are you sure you want to delete this product?');
+                                        setConfirmAction(() => () => confirmDelete(product.id));
+                                        setShowConfirm(true);
+                                    }}>Delete</button>
+                                </td>
+                            </tr>
+                            {editProductId === product.id && (
+                                <tr>
+                                    <td colSpan="5" className="edit-row" onClick={stopPropagation}>
+                                        <div ref={formRef}>
+                                            <div>
+                                                <label htmlFor={`image_${product.id}`}>Image URL:</label>
+                                                <input
+                                                    type="text"
+                                                    id={`image_${product.id}`}
+                                                    value={editField.image || ''}
+                                                    onChange={(e) => handleInputChange(e, 'image')}
+                                                    onKeyDown={(e) => handleKeyDown(e, product.id)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label htmlFor={`mrp_${product.id}`}>MRP:</label>
+                                                <input
+                                                    type="number"
+                                                    id={`mrp_${product.id}`}
+                                                    value={editField.mrp || ''}
+                                                    onChange={(e) => handleInputChange(e, 'mrp')}
+                                                    onKeyDown={(e) => handleKeyDown(e, product.id)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label htmlFor={`sellingPrice_${product.id}`}>Selling Price:</label>
+                                                <input
+                                                    type="number"
+                                                    id={`sellingPrice_${product.id}`}
+                                                    value={editField.sellingPrice || ''}
+                                                    onChange={(e) => handleInputChange(e, 'sellingPrice')}
+                                                    onKeyDown={(e) => handleKeyDown(e, product.id)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label htmlFor={`sizes_${product.id}`}>Variant Type:</label>
+                                                <input
+                                                    type="text"
+                                                    id={`sizes_${product.id}`}
+                                                    value={editField.sizes ? editField.sizes.join(', ') : ''}
+                                                    onChange={(e) => handleInputChange(e, 'sizes')}
+                                                    onKeyDown={(e) => handleKeyDown(e, product.id)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label htmlFor={`variant_${product.id}`}>Variant:</label>
+                                                <input
+                                                    type="text"
+                                                    id={`variant_${product.id}`}
+                                                    value={editField.variant || ''}
+                                                    onChange={(e) => handleInputChange(e, 'variant')}
+                                                    onKeyDown={(e) => handleKeyDown(e, product.id)}
+                                                />
+                                            </div>
+                                            <div>
+                                                <label id='c_image'>Carousel Images:</label>
+                                                {editField.carousel_images && editField.carousel_images.map((image, idx) => (
+                                                    <div key={`carousel_image_${idx}`}>
+                                                        <label htmlFor={`carousel_image_${idx}`}>Image URL {idx + 1}:</label>
+                                                        <input
+                                                            type="text"
+                                                            id={`carousel_image_${idx}`}
+                                                            value={image || ''}
+                                                            onChange={(e) => handleInputChange(e, `carousel_images[${idx}]`)}
+                                                            onKeyDown={(e) => handleKeyDown(e, product.id)}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <div>
+                                                <label id='c_color'>Colors:</label>
+                                                {editField.colors && editField.colors.map((color, idx) => (
+                                                    <div key={`color_${idx}`}>
+                                                        <label htmlFor={`color_name_${idx}`}>Color Name:</label>
+                                                        <input
+                                                            type="text"
+                                                            id={`color_name_${idx}`}
+                                                            value={color.name || ''}
+                                                            onChange={(e) => handleColorChange(e, idx, 'name')}
+                                                            onKeyDown={(e) => handleKeyDown(e, product.id)}
+                                                        />
+                                                        <label htmlFor={`color_image_${idx}`}>Color Image URL:</label>
+                                                        <input
+                                                            type="text"
+                                                            id={`color_image_${idx}`}
+                                                            value={color.image || ''}
+                                                            onChange={(e) => handleColorChange(e, idx, 'image')}
+                                                            onKeyDown={(e) => handleKeyDown(e, product.id)}
+                                                        />
+                                                    </div>
+                                                ))}
+                                            </div>
+                                            <button onClick={() => openConfirmModal(product.id)}>Save</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            )}
+                        </React.Fragment>
                     ))}
                 </tbody>
             </table>
 
             {showConfirm && (
                 <ConfirmationModal
-                    message="Are you sure you want to proceed?"
-                    onConfirm={confirmAction}
+                    message={confirmMessage}
+                    onConfirm={() => {
+                        confirmAction();
+                        setShowConfirm(false);
+                    }}
                     onCancel={() => setShowConfirm(false)}
                 />
             )}

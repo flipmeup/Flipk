@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ConfirmationModal from './ConfirmationModal';
+import './AdminPanel.css';
+import apiUrl from '../../config'
+
 
 const ChangeUPIForm = ({ onClose }) => {
     const [upiData, setUpiData] = useState([]);
@@ -12,7 +15,7 @@ const ChangeUPIForm = ({ onClose }) => {
     useEffect(() => {
         const fetchUpiData = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/upi');
+                const response = await axios.get(`${apiUrl}/api/upi`);
                 setUpiData(response.data);
             } catch (error) {
                 console.error('Error fetching UPI data:', error);
@@ -22,9 +25,29 @@ const ChangeUPIForm = ({ onClose }) => {
         fetchUpiData();
     }, []);
 
-    const startEditing = (id, field, value) => {
+    useEffect(() => {
+        if (editId) {
+            const upi = upiData.find(upi => upi._id === editId);
+            if (upi) {
+                setEditField({
+                    upi_id: upi.upi_id,
+                    upi_name: upi.upi_name,
+                    payment_options: { ...upi.payment_options }
+                });
+            }
+        }
+    }, [editId, upiData]);
+
+    const startEditing = (id) => {
+        const upi = upiData.find(upi => upi._id === id);
+        if (upi) {
+            setEditField({
+                upi_id: upi.upi_id,
+                upi_name: upi.upi_name,
+                payment_options: { ...upi.payment_options }
+            });
+        }
         setEditId(id);
-        setEditField({ [field]: value });
     };
 
     const handleInputChange = (field, value) => {
@@ -34,35 +57,32 @@ const ChangeUPIForm = ({ onClose }) => {
         }));
     };
 
-    const handleCheckboxChange = (option, checked) => {
+    const togglePaymentOption = (option) => {
         setEditField(prevState => ({
             ...prevState,
             payment_options: {
                 ...prevState.payment_options,
-                [option]: checked
+                [option]: !prevState.payment_options[option]
             }
         }));
     };
 
-    const confirmUpdate = (id, field, value) => {
-        setConfirmAction(() => () => handleUpdate(id, field, value));
+    const confirmUpdate = (id) => {
+        setConfirmAction(() => () => handleUpdate(id));
         setShowConfirm(true);
     };
 
-    const handleUpdate = async (id, field, value) => {
+    const handleUpdate = async (id) => {
         setShowConfirm(false);
         setEditId(null);
-        setEditField({});
-        
+
         try {
             const updatedData = {
-                [field]: value,
-                upi_id: editField.upi_id || upiData.find(upi => upi._id === id).upi_id,
-                upi_name: editField.upi_name || upiData.find(upi => upi._id === id).upi_name,
-                payment_options: editField.payment_options || upiData.find(upi => upi._id === id).payment_options
+                ...editField,
+                payment_options: editField.payment_options
             };
 
-            const response = await axios.put(`http://localhost:3000/api/upi/${id}`, updatedData);
+            const response = await axios.put(`${apiUrl}/api/upi/${id}`, updatedData);
             const updatedUpi = response.data;
 
             const updatedUpiData = upiData.map(upi => {
@@ -78,14 +98,10 @@ const ChangeUPIForm = ({ onClose }) => {
         }
     };
 
-    const handleKeyDown = (event, id, field, value) => {
+    const handleKeyDown = (event, id) => {
         if (event.key === 'Enter') {
-            confirmUpdate(id, field, value);
+            confirmUpdate(id);
         }
-    };
-
-    const confirmCancel = () => {
-        setShowConfirm(false);
     };
 
     return (
@@ -106,66 +122,56 @@ const ChangeUPIForm = ({ onClose }) => {
                                 {editId === upi._id ? (
                                     <input
                                         type="text"
-                                        value={editField.upi_id || upi.upi_id}
+                                        value={editField.upi_id !== undefined ? editField.upi_id : upi.upi_id}
                                         onChange={(e) => handleInputChange('upi_id', e.target.value)}
-                                        onKeyDown={(e) => handleKeyDown(e, upi._id, 'upi_id', editField.upi_id || upi.upi_id)}
+                                        onKeyDown={(e) => handleKeyDown(e, upi._id)}
                                     />
                                 ) : (
-                                    <span onDoubleClick={() => startEditing(upi._id, 'upi_id', upi.upi_id)}>{upi.upi_id}</span>
+                                    <span onDoubleClick={() => startEditing(upi._id)}>{upi.upi_id}</span>
                                 )}
                             </td>
                             <td>
                                 {editId === upi._id ? (
                                     <input
                                         type="text"
-                                        value={editField.upi_name || upi.upi_name}
+                                        value={editField.upi_name !== undefined ? editField.upi_name : upi.upi_name}
                                         onChange={(e) => handleInputChange('upi_name', e.target.value)}
-                                        onKeyDown={(e) => handleKeyDown(e, upi._id, 'upi_name', editField.upi_name || upi.upi_name)}
+                                        onKeyDown={(e) => handleKeyDown(e, upi._id)}
                                     />
                                 ) : (
-                                    <span onDoubleClick={() => startEditing(upi._id, 'upi_name', upi.upi_name)}>{upi.upi_name}</span>
+                                    <span onDoubleClick={() => startEditing(upi._id)}>{upi.upi_name}</span>
                                 )}
                             </td>
                             <td>
-                                <div>
-                                    <label>
-                                        PhonePe:
-                                        <input
-                                            type="checkbox"
-                                            checked={editField.payment_options?.divphonepe || upi.payment_options.divphonepe}
-                                            onChange={(e) => handleCheckboxChange('divphonepe', e.target.checked)}
-                                        />
-                                    </label>
-                                </div>
-                                <div>
-                                    <label>
-                                        BHIM UPI:
-                                        <input
-                                            type="checkbox"
-                                            checked={editField.payment_options?.divbhimupi || upi.payment_options.divbhimupi}
-                                            onChange={(e) => handleCheckboxChange('divbhimupi', e.target.checked)}
-                                        />
-                                    </label>
-                                </div>
-                                <div>
-                                    <label>
-                                        Google Pay:
-                                        <input
-                                            type="checkbox"
-                                            checked={editField.payment_options?.divgooglepay || upi.payment_options.divgooglepay}
-                                            onChange={(e) => handleCheckboxChange('divgooglepay', e.target.checked)}
-                                        />
-                                    </label>
-                                </div>
-                                <div>
-                                    <label>
-                                        UPI:
-                                        <input
-                                            type="checkbox"
-                                            checked={editField.payment_options?.divupi || upi.payment_options.divupi}
-                                            onChange={(e) => handleCheckboxChange('divupi', e.target.checked)}
-                                        />
-                                    </label>
+                                <div style={{maxWidth:'200px'}}>
+                                    <button
+                                        className={`active-${upi.payment_options?.divphonepe ? 'green' : 'red'}`}
+                                        disabled={editId !== upi._id}
+                                        onClick={() => togglePaymentOption('divphonepe')}
+                                    >
+                                        {upi.payment_options?.divphonepe ? 'PhonePe (Active)' : 'PhonePe (Inactive)'}
+                                    </button>
+                                    <button
+                                        className={`active-${upi.payment_options?.divbhimupi ? 'green' : 'red'}`}
+                                        disabled={editId !== upi._id}
+                                        onClick={() => togglePaymentOption('divbhimupi')}
+                                    >
+                                        {upi.payment_options?.divbhimupi ? 'BHIM UPI (Active)' : 'BHIM UPI (Inactive)'}
+                                    </button>
+                                    <button
+                                        className={`active-${upi.payment_options?.divgooglepay ? 'green' : 'red'}`}
+                                        disabled={editId !== upi._id}
+                                        onClick={() => togglePaymentOption('divgooglepay')}
+                                    >
+                                        {upi.payment_options?.divgooglepay ? 'Google Pay (Active)' : 'Google Pay (Inactive)'}
+                                    </button>
+                                    <button
+                                        className={`active-${upi.payment_options?.divupi ? 'green' : 'red'}`}
+                                        disabled={editId !== upi._id}
+                                        onClick={() => togglePaymentOption('divupi')}
+                                    >
+                                        {upi.payment_options?.divupi ? 'UPI (Active)' : 'UPI (Inactive)'}
+                                    </button>
                                 </div>
                             </td>
                             <td>
@@ -173,13 +179,13 @@ const ChangeUPIForm = ({ onClose }) => {
                                     <ConfirmationModal
                                         message="Are you sure you want to save?"
                                         onConfirm={confirmAction}
-                                        onCancel={confirmCancel}
+                                        onCancel={() => setShowConfirm(false)}
                                     />
                                 )}
                                 {editId === upi._id ? (
-                                    <button onClick={() => confirmUpdate(upi._id, 'upi_id', editField.upi_id || upi.upi_id)}>Save</button>
+                                    <button onClick={() => confirmUpdate(upi._id)}>Save</button>
                                 ) : (
-                                    <button onClick={() => startEditing(upi._id, 'upi_id', upi.upi_id)}>Edit</button>
+                                    <button onClick={() => startEditing(upi._id)}>Edit</button>
                                 )}
                             </td>
                         </tr>

@@ -1,6 +1,10 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import html2canvas from 'html2canvas';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import './AdminPanel.css';
+import apiUrl from '../../config'
+
 
 const AddProductForm = () => {
     const [productData, setProductData] = useState({
@@ -10,60 +14,53 @@ const AddProductForm = () => {
         mrp: '',
         sellingPrice: '',
         assuredImage: '/assets/logo/assured.png',
-        description: '', // Initial empty string
+        description: '',
         sizes: [],
         variant: '',
         carousel_images: [],
-        colors: [] // Initialize colors array for storing color options
+        colors: []
     });
 
-    const descriptionRef = useRef(null); // Reference for the description div
+    const fetchProducts = async () => {
+        try {
+            const response = await axios.get(`${apiUrl}/api/products`);
+            setProducts(response.data);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
+    };
+
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+    const [products, setProducts] = useState([]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const { id, image, name, mrp, sellingPrice, assuredImage, sizes, variant, carousel_images, colors } = productData;
+        const mrp = parseFloat(productData.mrp);
+        const sellingPrice = parseFloat(productData.sellingPrice);
 
-        // Validate required fields
-        if (!image || !name || !mrp || !sellingPrice || !descriptionRef.current || colors.length === 0) {
-            alert('Please fill out all required fields.');
+        if (isNaN(mrp) || isNaN(sellingPrice)) {
+            alert('Please enter valid numeric values for MRP and Selling Price.');
             return;
         }
 
-        // Convert mrp and sellingPrice to numbers
-        const mrpNumber = parseFloat(mrp);
-        const sellingPriceNumber = parseFloat(sellingPrice);
+        const newProductId = products.length + 1; // Calculate the new ID here
 
-        if (isNaN(mrpNumber) || isNaN(sellingPriceNumber)) {
-            alert('MRP and Selling Price must be valid numbers.');
-            return;
-        }
+        const newProduct = {
+            ...productData,
+            id: newProductId, // Assign the calculated new ID
+            mrp: mrp,
+            sellingPrice: sellingPrice
+        };
 
         try {
-            // Convert description to image
-            const canvas = await html2canvas(descriptionRef.current);
-            const descriptionImage = canvas.toDataURL('image/png');
-
-            // Construct new product object
-            const newProduct = {
-                id,
-                image,
-                name,
-                mrp: mrpNumber,
-                sellingPrice: sellingPriceNumber,
-                assuredImage,
-                description: descriptionImage, // Save the description image as a data URL
-                sizes,
-                variant,
-                carousel_images,
-                colors
-            };
-
-            // POST request to save product
-            const response = await axios.post('https://flip-wind-a6dc.vercel.app/api/products', newProduct);
+            const response = await axios.post(`${apiUrl}/api/products`, newProduct);
             console.log('Product added:', response.data);
 
-            // Clear form fields after successful submission
+            // Clear the form after successful submission
             setProductData({
                 id: '',
                 image: '',
@@ -71,12 +68,15 @@ const AddProductForm = () => {
                 mrp: '',
                 sellingPrice: '',
                 assuredImage: '/assets/logo/assured.png',
-                description: '', // Reset description field
+                description: '',
                 sizes: [],
                 variant: '',
                 carousel_images: [],
                 colors: []
             });
+
+            // Fetch updated products after adding new product
+            fetchProducts();
 
             alert('Product added successfully!');
         } catch (error) {
@@ -88,25 +88,22 @@ const AddProductForm = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
 
-        if (name === 'sizes' || name === 'carousel_images') {
-            // Handle sizes and carousel_images as arrays
-            setProductData(prevData => ({
-                ...prevData,
-                [name]: value.split(',').map(item => item.trim()) // Convert comma-separated string to array
-            }));
-        } else {
-            setProductData(prevData => ({
-                ...prevData,
-                [name]: value
-            }));
+        if (name === 'assuredImage') {
+            return;
         }
+
+        setProductData(prevData => ({
+            ...prevData,
+            [name]: name === 'sizes' || name === 'carousel_images' ? value.split(',').map(item => item.trim()) : value
+        }));
     };
 
-    const handleDescriptionChange = (e) => {
-        setProductData({
-            ...productData,
-            description: e.target.innerHTML // Update description with innerHTML for contentEditable
-        });
+    const handleDescriptionChange = (event, editor) => {
+        const data = editor.getData();
+        setProductData(prevData => ({
+            ...prevData,
+            description: data
+        }));
     };
 
     const handleColorChange = (e, index) => {
@@ -142,147 +139,133 @@ const AddProductForm = () => {
 
     return (
         <div className="add-product-form">
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Product ID:
-                    <input
-                        type="text"
-                        name="id"
-                        value={productData.id}
-                        onChange={handleChange}
-                        className="full-width-input"
-                        required
-                    />
-                </label>
-                <label>
-                    Image URL:
+            <h2>Add New Product</h2>
+            <form onSubmit={handleSubmit} className="form">
+                <div className="form-group">
+                    <label>Image URL:</label>
                     <input
                         type="text"
                         name="image"
                         value={productData.image}
                         onChange={handleChange}
-                        className="full-width-input"
+                        className="form-control"
                         required
                     />
-                </label>
-                <label>
-                    Name:
+                </div>
+                <div className="form-group">
+                    <label>Name:</label>
                     <input
                         type="text"
                         name="name"
                         value={productData.name}
                         onChange={handleChange}
-                        className="full-width-input"
+                        className="form-control"
                         required
                     />
-                </label>
-                <label>
-                    MRP:
-                    <input
-                        type="text"
-                        name="mrp"
-                        value={productData.mrp}
-                        onChange={handleChange}
-                        className="full-width-input"
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-md-6">
+                        <label>MRP:</label>
+                        <input
+                            type="text"
+                            name="mrp"
+                            value={productData.mrp}
+                            onChange={handleChange}
+                            className="form-control"
+                            required
+                        />
+                    </div>
+                    <div className="form-group col-md-6">
+                        <label>Selling Price:</label>
+                        <input
+                            type="text"
+                            name="sellingPrice"
+                            value={productData.sellingPrice}
+                            onChange={handleChange}
+                            className="form-control"
+                            required
+                        />
+                    </div>
+                </div>
+                <div className="form-group">
+                    <label>Description:</label>
+                    <CKEditor
+                        editor={ClassicEditor}
+                        data={productData.description}
+                        onChange={handleDescriptionChange}
+                        config={{
+                            height: '400px'
+                        }}
                         required
                     />
-                </label>
-                <label>
-                    Selling Price:
-                    <input
-                        type="text"
-                        name="sellingPrice"
-                        value={productData.sellingPrice}
-                        onChange={handleChange}
-                        className="full-width-input"
-                        required
-                    />
-                </label>
-                <label>
-                    Assured Image URL:
-                    <input
-                        type="text"
-                        name="assuredImage"
-                        value={productData.assuredImage}
-                        onChange={handleChange}
-                        className="full-width-input"
-                        disabled
-                    />
-                </label>
-                <label>
-                    Description:
-                    <div
-                        contentEditable
-                        name="description"
-                        className="description-input"
-                        onBlur={handleDescriptionChange} // Use onBlur instead of onInput
-                        style={{ border: '1px solid #ccc', minHeight: '100px', padding: '5px' }}
-                        dangerouslySetInnerHTML={{ __html: productData.description }}
-                        ref={descriptionRef} // Set the ref to the description div
-                        required
-                    />
-                </label>
-                <label>
-                    Sizes (comma-separated):
-                    <input
-                        type="text"
-                        name="sizes"
-                        value={productData.sizes.join(', ')}
-                        onChange={handleChange}
-                        className="full-width-input"
-                    />
-                </label>
-                <label>
-                    Variant:
-                    <input
-                        type="text"
-                        name="variant"
-                        value={productData.variant}
-                        onChange={handleChange}
-                        className="full-width-input"
-                        required
-                    />
-                </label>
-                <label>
-                    Carousel Images (comma-separated URLs):
+                </div>
+                <div className="form-group">
+                    <div className="row">
+                        <div className="col">
+                            <label>Variant:</label>
+                            <input
+                                type="text"
+                                name="variant"
+                                value={productData.variant}
+                                onChange={handleChange}
+                                className="form-control"
+                            />
+                        </div>
+                        <div className="col">
+                            <label>Variant-Type:</label>
+                            <input
+                                type="text"
+                                name="sizes"
+                                value={productData.sizes.join(', ')}
+                                onChange={handleChange}
+                                className="form-control"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="form-group">
+                    <label>Carousel Images (comma-separated URLs):</label>
                     <input
                         type="text"
                         name="carousel_images"
                         value={productData.carousel_images.join(', ')}
                         onChange={handleChange}
-                        className="full-width-input"
+                        className="form-control"
+                        required
                     />
-                </label>
+                </div>
                 <div className="color-options">
-                    <h3>Color Options</h3>
+                    <h3>Color Options - Add Variant</h3>
                     {productData.colors.map((color, index) => (
                         <div key={index} className="color-option">
-                            <label>
-                                Color Name:
+                            <div className="form-group">
+                                <label>Color Name:</label>
                                 <input
                                     type="text"
                                     name="name"
                                     value={color.name}
                                     onChange={(e) => handleColorChange(e, index)}
-                                    className="color-name-input"
+                                    className="form-control"
                                 />
-                            </label>
-                            <label>
-                                Color Image URL:
+                            </div>
+                            <div className="form-group">
+                                <label>Color Image URL:</label>
                                 <input
                                     type="text"
                                     name="image"
                                     value={color.image}
                                     onChange={(e) => handleColorChange(e, index)}
-                                    className="color-image-input"
+                                    className="form-control"
                                 />
-                            </label>
-                            <button type="button" onClick={() => removeColorOption(index)}>Remove</button>
+                            </div>
+                            <button type="button" onClick={() => removeColorOption(index)} className="btn btn-danger">Remove</button>
                         </div>
                     ))}
-                    <button type="button" onClick={addColorOption}>Add Color Option</button>
+                    <button type="button" onClick={addColorOption} className="btn btn-primary">Add Color Option</button>
                 </div>
-                <button type="submit" className="submit-btn">Add Product</button>
+                <div className="text-center mt-3">
+                    <button type="submit" className="btn btn-success">Add Product</button>
+                </div>
             </form>
         </div>
     );

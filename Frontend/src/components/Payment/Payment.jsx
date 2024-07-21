@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import PaymentNav from '../PaymentNav/PaymentNav';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Payment.css';
+import apiUrl from '../../config'
 
 const Payment = () => {
     const location = useLocation();
@@ -17,7 +18,7 @@ const Payment = () => {
     useEffect(() => {
         const fetchUpiData = async () => {
             try {
-                const response = await fetch(`http://localhost:3000/api/upi`);
+                const response = await fetch(`${apiUrl}/api/upi`);
                 const data = await response.json();
                 setUpiData(data[0]); // Assuming the response contains an array with one object
                 setPaymentOptions(data[0].payment_options); // Set payment options directly from the response

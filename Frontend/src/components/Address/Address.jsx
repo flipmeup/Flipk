@@ -6,7 +6,7 @@ import PaymentNav from '../PaymentNav/PaymentNav';
 const Address = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { product, size } = location.state || {};
+    const { product, size,color } = location.state || {};
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -19,7 +19,7 @@ const Address = () => {
             address: event.target.address.value,
             landmark: event.target.landmark.value,
         };
-        navigate('/order-summary', { state: { addressData, product, size } });
+        navigate('/order-summary', { state: { addressData, product, size,color } });
     };
 
     return (

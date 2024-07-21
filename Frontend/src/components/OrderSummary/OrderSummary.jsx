@@ -6,7 +6,7 @@ import PaymentNav from '../PaymentNav/PaymentNav';
 const OrderSummary = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { addressData, product, size } = location.state || {};
+    const { addressData, product, size,color } = location.state || {};
 
     // State to hold product details
     const [loadedProduct, setLoadedProduct] = useState(null);
@@ -58,7 +58,7 @@ const OrderSummary = () => {
                                 <img id="item_image" src={loadedProduct.image} alt="Product" />
                                 <div className="description">
                                     <div className="product-title mb-1" id="product-title">
-                                        {loadedProduct.name} ({size}) {/* Displaying size here */}
+                                        {loadedProduct.name} ({size}) ({color}) {/* Displaying size here */}
                                     </div>
                                     <img src={loadedProduct.assuredImage} width="77px" className="img-fluid" alt="FA" />
                                 </div>

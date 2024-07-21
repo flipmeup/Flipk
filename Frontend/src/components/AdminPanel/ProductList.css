@@ -1,19 +1,8 @@
-/* ProductsList.css */
+/* ProductList.css */
 
 .products-list {
-    width: 90%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    background-color: #fff;
-}
-
-.products-list h2 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
+    max-width: 80%;
+    margin: auto;
 }
 
 table {
@@ -22,57 +11,60 @@ table {
     margin-top: 20px;
 }
 
-table th, table td {
-    padding: 12px;
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 10px;
     text-align: left;
-    border-bottom: 1px solid #ddd;
 }
 
-table th {
-    font-weight: bold;
+.edit-row {
+    background-color: transparent;
 }
 
-table td {
-color: black; 
-font-weight: bold;   vertical-align: middle;
+.edit-row div {
+    margin-bottom: 10px;
 }
 
-table img {
-    max-width: 100px;
-    height: auto;
-    display: block;
-    margin: 0 auto;
+.edit-row input {
+    width: calc(100% - 20px); /* Adjust input width */
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
-@media screen and (max-width: 600px) {
-    table th, table td {
-        padding: 8px;
-    }
-    
-    table img {
-        max-width: 80px;
-    }
-}
-table th {
-    background-color: #677bc4;
-    font-weight: bold;
-}
-
-.products-list td button {
-    padding: 0.5rem 1rem;
-    background-color: #f44336;
+.edit-row button {
+    background-color: #4CAF50;
     color: white;
+    padding: 10px 15px;
     border: none;
     cursor: pointer;
     border-radius: 4px;
-    font-size: 0.875rem;
+    margin-top: 10px;
 }
 
-.products-list td button:hover {
-    background-color: #df3730;
+.edit-row button:hover {
+    background-color: #45a049;
 }
 
-.products-list td button:focus {
-    outline: none;
-    box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #f44336;
+.edit-row label {
+    display: block;
+    margin-bottom: 5px;
+    margin-left: 0px;
+    font-weight: bold;
+}
+
+#c_image{
+    color: Green;
+    font-size: 20px;
+
+}
+#c_color{
+    color: Blue;
+    font-size: 20px;
+    
 }

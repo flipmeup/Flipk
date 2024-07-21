@@ -1,7 +1,7 @@
 /* AdminPanel.css */
 .admin-panel {
     display: flex;
-    height: 100vh;
+   min-height: 100vh;
     background-color: #202124;
     color: #ffffff;
 }
@@ -27,7 +27,7 @@
     border-radius: 8px;
     width: 95%;    font-weight: 700;
 
-    margin: 0 auto; /* Centers the form horizontally */
+    margin:0 auto 20px auto; /* Centers the form horizontally */
 }
 .add-product-form h2{
     background-color: #677bc4;
@@ -37,8 +37,8 @@
 }
 
 .change-upi-form{
-    background-color: #fff;
-    color: black;
+    background-color: transparent;
+    color: white;
     font-weight: 800;
     padding: 20px;
     border-radius: 8px;
@@ -138,4 +138,385 @@ label{
 .sidebar button a:hover {
     text-decoration: underline; /* Underline on hover */
     color: #ffffff; /* Text color on hover */
+}
+/* import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
+import './AdminPanel.css';
+
+const AddProductForm = () => {
+    const [productData, setProductData] = useState({
+        id: '',
+        image: '',
+        name: '',
+        mrp: '',
+        sellingPrice: '',
+        assuredImage: '/assets/logo/assured.png',
+        description: '',
+        sizes: [],
+        variant: '',
+        carousel_images: [],
+        colors: []
+    });
+
+    const descriptionRef = useRef(null); // Ref for description textarea
+
+    useEffect(() => {
+        if (descriptionRef.current) {
+            descriptionRef.current.style.height = 'auto';
+            descriptionRef.current.style.height = `${descriptionRef.current.scrollHeight}px`;
+        }
+    }, [productData.description]);
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const mrp = parseFloat(productData.mrp);
+        const sellingPrice = parseFloat(productData.sellingPrice);
+
+        if (isNaN(mrp) || isNaN(sellingPrice)) {
+            alert('Please enter valid numeric values for MRP and Selling Price.');
+            return;
+        }
+
+        const id = products.length + 1;
+
+        const newProduct = {
+            ...productData,
+            id: id,
+            mrp: mrp,
+            sellingPrice: sellingPrice
+        };
+
+        try {
+            const response = await axios.post('${apiUrl}/api/products', newProduct);
+            console.log('Product added:', response.data);
+
+            setProductData({
+                id: '',
+                image: '',
+                name: '',
+                mrp: '',
+                sellingPrice: '',
+                assuredImage: '/assets/logo/assured.png',
+                description: '',
+                sizes: [],
+                variant: '',
+                carousel_images: [],
+                colors: []
+            });
+
+            alert('Product added successfully!');
+        } catch (error) {
+            console.error('Error adding product:', error);
+            alert('Failed to add product. Please try again.');
+        }
+    };
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        if (name === 'assuredImage') {
+            return;
+        }
+
+        setProductData(prevData => ({
+            ...prevData,
+            [name]: name === 'sizes' || name === 'carousel_images' ? value.split(',').map(item => item.trim()) : value
+        }));
+    };
+
+    const handleColorChange = (e, index) => {
+        const { name, value } = e.target;
+
+        const updatedColors = [...productData.colors];
+        updatedColors[index] = {
+            ...updatedColors[index],
+            [name]: value
+        };
+
+        setProductData(prevData => ({
+            ...prevData,
+            colors: updatedColors
+        }));
+    };
+
+    const addColorOption = () => {
+        setProductData(prevData => ({
+            ...prevData,
+            colors: [...prevData.colors, { name: '', image: '' }]
+        }));
+    };
+
+    const removeColorOption = (index) => {
+        const updatedColors = [...productData.colors];
+        updatedColors.splice(index, 1);
+        setProductData(prevData => ({
+            ...prevData,
+            colors: updatedColors
+        }));
+    };
+
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response = await axios.get('${apiUrl}/api/products');
+                setProducts(response.data);
+            } catch (error) {
+                console.error('Error fetching products:', error);
+            }
+        };
+
+        fetchProducts();
+    }, []);
+
+    const handleTextareaChange = () => {
+        descriptionRef.current.style.height = 'auto';
+        descriptionRef.current.style.height = `${descriptionRef.current.scrollHeight}px`;
+    };
+
+    return (
+        <div className="add-product-form">
+            <h2>Add New Product</h2>
+            <form onSubmit={handleSubmit} className="form">
+                <div className="form-group">
+                    <label>Image URL:</label>
+                    <input
+                        type="text"
+                        name="image"
+                        value={productData.image}
+                        onChange={handleChange}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <label>Name:</label>
+                    <input
+                        type="text"
+                        name="name"
+                        value={productData.name}
+                        onChange={handleChange}
+                        className="form-control"
+                        required
+                    />
+                </div>
+                <div className="form-row">
+                    <div className="form-group col-md-6">
+                        <label>MRP:</label>
+                        <input
+                            type="text"
+                            name="mrp"
+                            value={productData.mrp}
+                            onChange={handleChange}
+                            className="form-control"
+                            required
+                        />
+                    </div>
+                    <div className="form-group col-md-6">
+                        <label>Selling Price:</label>
+                        <input
+                            type="text"
+                            name="sellingPrice"
+                            value={productData.sellingPrice}
+                            onChange={handleChange}
+                            className="form-control"
+                            required
+                        />
+                    </div>
+                </div>
+                <div className="form-group">
+                    <label>Description:</label>
+                    <textarea
+                        name="description"
+                        value={productData.description}
+                        onChange={handleChange}
+                        onInput={handleTextareaChange}
+                        ref={descriptionRef}
+                        className="form-control description-textarea"
+                        style={{ minHeight: '120px' }} // Set a minimum height
+                        required
+                    />
+                </div>
+                <div className="form-group">
+                    <div className="row">
+                    <div className="col">
+                            <label>Variant:</label>
+                            <input
+                                type="text"
+                                name="variant"
+                                value={productData.variant}
+                                onChange={handleChange}
+                                className="form-control"
+                                required
+                            />
+                        </div>
+                        <div className="col">
+                            <label>Variant-Type (comma-separated):</label>
+                            <input
+                                type="text"
+                                name="sizes"
+                                value={productData.sizes.join(', ')}
+                                onChange={handleChange}
+                                className="form-control"
+                            />
+                        </div>
+                        
+                    </div>
+                </div>
+                <div className="form-group">
+                    <label>Carousel Images (comma-separated URLs):</label>
+                    <input
+                        type="text"
+                        name="carousel_images"
+                        value={productData.carousel_images.join(', ')}
+                        onChange={handleChange}
+                        className="form-control"
+                    />
+                </div>
+                <div className="color-options">
+                    <h3>Color Options</h3>
+                    {productData.colors.map((color, index) => (
+                        <div key={index} className="color-option">
+                            <div className="form-group">
+                                <label>Color Name:</label>
+                                <input
+                                    type="text"
+                                    name="name"
+                                    value={color.name}
+                                    onChange={(e) => handleColorChange(e, index)}
+                                    className="form-control"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label>Color Image URL:</label>
+                                <input
+                                    type="text"
+                                    name="image"
+                                    value={color.image}
+                                    onChange={(e) => handleColorChange(e, index)}
+                                    className="form-control"
+                                />
+                            </div>
+                            <button type="button" onClick={() => removeColorOption(index)} className="btn btn-danger">Remove</button>
+                        </div>
+                    ))}
+                    <button type="button" onClick={addColorOption} className="btn btn-primary">Add Color Option</button>
+                </div>
+                <div className="text-center mt-3">
+                    <button type="submit" className="btn btn-success">Add Product</button>
+                </div>
+            </form>
+        </div>
+    );
+};
+
+export default AddProductForm; */
+.add-product-form {
+    width: 90%;
+    margin: auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.add-product-form h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+}
+
+.form-group.col-md-6 {
+    flex: 1;
+}
+
+.description-textarea {
+    resize: none;
+}
+
+.color-options {
+    margin-top: 20px;
+}
+
+.color-options h3 {
+    margin-bottom: 10px;    font-size: 25px;
+    font-weight: 700;
+    color: #fff;
+    background-color: #677bc4;
+    padding: 15px;
+}
+
+.color-option {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.color-option .form-group {
+    margin-right: 10px;
+    flex: 1;
+}
+
+.color-option button {
+    flex-shrink: 0;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.btn-success {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.btn-primary, .btn-success, .btn-danger {
+    margin-right: 10px;
+}
+
+.active-green{
+    color:white;
+    background-color: green;
+}
+.active-red{
+    color:white;
+    background-color: red;
 }

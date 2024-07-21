@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios'; // Import axios for HTTP requests
 import './Products.css';
+import apiUrl from '../../config'
+
 
 const Products = () => {
     const [products, setProducts] = useState([]);
@@ -10,7 +12,7 @@ const Products = () => {
     useEffect(() => {
         const fetchProducts = async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/products');
+                const response = await axios.get(`${apiUrl}/api/products`);
                 setProducts(response.data);
                 preloadImages(response.data); // Preload images once products are fetched
             } catch (error) {
