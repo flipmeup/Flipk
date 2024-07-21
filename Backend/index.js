@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 // Connect to MongoDB
-const uri = 'mongodb+srv://root:toor@cluster0.gqgk6wn.mongodb.net/flipkart?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://flipkart:123flipkart%231@cluster0.oo1tbmj.mongodb.net/Flipkart?retryWrites=true&w=majority&appName=Cluster0';
 mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => console.log('MongoDB connected'))
     .catch(err => console.log(err));
