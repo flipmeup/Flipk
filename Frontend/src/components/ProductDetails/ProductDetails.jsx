@@ -170,9 +170,9 @@ const ProductDetails = () => {
                     </div>
                     <div className="container-fluid p-3 mb-1 card"><img className="my-2" src="/assets/logo/pay-later.png" alt="pay-later" /></div>
                     <div className="container-fluid px-2 py-3 row feature-container product-extra">
-                        <div className="col-4 featured-item d-flex align-items-center flex-column bd-highlight px-1"><img className="featured-img mb-3" src="https://rukminim2.flixcart.com/www/150/50/promos/12/08/2021/d7e463af-de7d-4ae6-9cb1-9ce00ef63195.png?q=90" /><span className="feature-title"> 7 days Replacement </span></div>
-                        <div className="col-4 featured-item d-flex align-items-center flex-column bd-highlight px-1"><img className="featured-img mb-3" src="https://rukminim2.flixcart.com/www/150/50/promos/12/08/2021/a7643ad9-1a53-46bf-a304-ae77b1414ef8.png?q=90" /><span className="feature-title"> No Cash On Delivery </span></div>
-                        <div className="col-4 featured-item d-flex align-items-center flex-column bd-highlight px-1"><img className="featured-img mb-3 mt-1" src="https://rukminim2.flixcart.com/www/150/50/promos/07/06/2022/b83cee93-e815-4232-bba2-c209116588de.png?q=90" /><span className="feature-title"> Plus (F-Assured) </span></div>
+                        <div className="col-4 featured-item d-flex align-items-center flex-column bd-highlight px-1"><img alt='11' className="featured-img mb-3" src="https://rukminim2.flixcart.com/www/150/50/promos/12/08/2021/d7e463af-de7d-4ae6-9cb1-9ce00ef63195.png?q=90" /><span className="feature-title"> 7 days Replacement </span></div>
+                        <div className="col-4 featured-item d-flex align-items-center flex-column bd-highlight px-1"><img alt='12' className="featured-img mb-3" src="https://rukminim2.flixcart.com/www/150/50/promos/12/08/2021/a7643ad9-1a53-46bf-a304-ae77b1414ef8.png?q=90" /><span className="feature-title"> No Cash On Delivery </span></div>
+                        <div className="col-4 featured-item d-flex align-items-center flex-column bd-highlight px-1"><img alt='13' className="featured-img mb-3 mt-1" src="https://rukminim2.flixcart.com/www/150/50/promos/07/06/2022/b83cee93-e815-4232-bba2-c209116588de.png?q=90" /><span className="feature-title"> Plus (F-Assured) </span></div>
                     </div>
                     <div className='container-fluid product-detail px-3 py-3 pb-4 mb-4 card'>
                         <h3>Product Details</h3>
