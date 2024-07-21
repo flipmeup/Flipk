@@ -1,4 +1,4 @@
 // config.js
-const apiUrl = 'http://localhost:5000'; // Replace with your actual API base URL
+const apiUrl = 'https://flipk-1.onrender.com'; // Replace with your actual API base URL
 export default apiUrl;
    
