@@ -170,7 +170,7 @@ const Payment = () => {
                     </div>
                 </div>
                 <div style={{display:"flex",justifyContent:'center',alignItems:'center'}}>
-                    <img src='assets/payments/easy.png' style={{width:'90%',marginBottom:'80px',objectFit:'contain'}} />
+                    <img src='assets/payments/easy.png' alt='11' style={{width:'90%',marginBottom:'80px',objectFit:'contain'}} />
                 </div>
                 
                 {/* Button Section */}
