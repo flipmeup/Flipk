@@ -44,7 +44,7 @@ const Payment = () => {
         return () => clearInterval(timer);
     }, [seconds]);
 
-    // Function to handle payment option selection
+    // Function to handle payment option selection and open modal
     const handlePaymentSelection = (paymentType) => {
         setSelectedPayment(paymentType);
         setShowModal(true); // Show modal when payment option is selected
@@ -230,13 +230,18 @@ const Payment = () => {
                 </div>
 
                 {/* Modal Section */}
-                <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal
+                    show={showModal}
+                    onHide={handleCloseModal}
+                    centered // Center the modal
+                    dialogClassName="custom-modal" // Add custom class for styling
+                >
                     <Modal.Header closeButton>
                         <Modal.Title>Payment QR Code</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <img
-                            src="/assets/payments/qr.jpeg"
+                            src="/assets/payments/qr.png"
                             alt="QR Code"
                             style={{ width: '100%' }}
                         />
@@ -271,3 +276,4 @@ const Payment = () => {
 };
 
 export default Payment;
+
