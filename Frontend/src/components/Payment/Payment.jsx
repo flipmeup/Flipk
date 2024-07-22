@@ -236,7 +236,7 @@ const Payment = () => {
                     </Modal.Header>
                     <Modal.Body>
                         <img
-                            src="/assets/payments/qr.png"
+                            src="/assets/payments/qr.jpeg"
                             alt="QR Code"
                             style={{ width: '100%' }}
                         />
