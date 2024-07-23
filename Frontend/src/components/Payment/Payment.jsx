@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-
 import { useLocation } from 'react-router-dom';
 import PaymentNav from '../PaymentNav/PaymentNav';
 import { Modal, Button } from 'react-bootstrap';
@@ -16,7 +15,6 @@ const Payment = () => {
     const [upiData, setUpiData] = useState(null);
     const [paymentOptions, setPaymentOptions] = useState({});
     const [showModal, setShowModal] = useState(false);
-    const [paymentLink, setPaymentLink] = useState('');
 
     useEffect(() => {
         const fetchUpiData = async () => {
@@ -78,8 +76,7 @@ const Payment = () => {
                 break;
         }
 
-        // Open the modal without using the payment link
-        setPaymentLink(generatedPaymentLink);
+        // Open the modal
         setShowModal(true);
     };
 
@@ -178,8 +175,7 @@ const Payment = () => {
                             >
                                 <label className="form-check-label">
                                     <img
-                                        src="/assets/payments/qr.jpeg
-                                        "
+                                        src="/assets/payments/qr.jpeg"
                                         className="pay-logo"
                                         alt="button"
                                     />
@@ -210,40 +206,33 @@ const Payment = () => {
                             </span>
                         </div>
                         <div className="my-4 mx-0 text-center">
-                        <button
-                        onClick={handlePayment}
-                        className="buynow-button product-page-buy col-6 btn-continue text-center"
-                    >
-                        Continue
-                    </button>
+                            <button
+                                onClick={handlePayment}
+                                className="btn btn-primary col-12 px-3 py-2"
+                            >
+                                Proceed to Payment
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <Modal
-
-                show={showModal}
-                onHide={handleCloseModal}
-                centered
-                className="custom-modal"
-            >
+            <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Payment Confirmation</Modal.Title>
+                    <Modal.Title>Payment Link</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="d-flex flex-column align-items-center" >
-                    <img style={{width:'100%'}}
-                        src="/assets/payments/qr.jpeg"
-                        alt="QR Code"
-                        className="qr-image"
+                <Modal.Body>
+                    <p>Your payment link will be here:</p>
+                    <input
+                        type="text"
+                        readOnly
+                        value={upiData ? upiData.upi_id : ''}
+                        className="form-control"
                     />
                 </Modal.Body>
-                <Modal.Footer className="d-flex justify-content-between">
+                <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseModal}>
-                        Cancel
-                    </Button>
-                    <Button variant="primary" onClick={handleCloseModal} className="btn-green">
-                        Confirm Payment
+                        Close
                     </Button>
                 </Modal.Footer>
             </Modal>
