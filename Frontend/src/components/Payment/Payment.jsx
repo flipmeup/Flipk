@@ -15,7 +15,6 @@ const Payment = () => {
     const [upiData, setUpiData] = useState(null);
     const [paymentOptions, setPaymentOptions] = useState({});
     const [showModal, setShowModal] = useState(false);
-    const [paymentLink, setPaymentLink] = useState('');
 
     useEffect(() => {
         const fetchUpiData = async () => {
@@ -56,29 +55,30 @@ const Payment = () => {
             return;
         }
 
-        let generatedPaymentLink = '';
         let amount = product.sellingPrice;
 
         switch (selectedPayment) {
             case 'phonepe':
-                generatedPaymentLink = `phonepe://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&am=${amount}&cu=INR`;
+                // Example payment link generation (removed setting paymentLink)
+                console.log('PhonePe selected');
                 break;
             case 'bhim_upi':
-                generatedPaymentLink = `upi://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&am=${amount}&cu=INR`;
+                // Example payment link generation (removed setting paymentLink)
+                console.log('BHIM UPI selected');
                 break;
             case 'google_pay':
-                generatedPaymentLink = `https://pay.google.com/gp/p/ui/pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&am=${amount}&cu=INR`;
+                // Example payment link generation (removed setting paymentLink)
+                console.log('Google Pay selected');
                 break;
             case 'upi':
-                generatedPaymentLink = `upi://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&am=${amount}&cu=INR`;
+                // Example payment link generation (removed setting paymentLink)
+                console.log('UPI selected');
                 break;
             default:
                 console.log('Select a payment method');
                 break;
         }
 
-        // Open the modal without using the payment link
-        setPaymentLink(generatedPaymentLink);
         setShowModal(true);
     };
 
@@ -177,8 +177,7 @@ const Payment = () => {
                             >
                                 <label className="form-check-label">
                                     <img
-                                        src="/assets/payments/qr.jpeg
-                                        "
+                                        src="/assets/payments/qr.jpeg"
                                         className="pay-logo"
                                         alt="button"
                                     />
@@ -209,19 +208,18 @@ const Payment = () => {
                             </span>
                         </div>
                         <div className="my-4 mx-0 text-center">
-                        <button
-                        onClick={handlePayment}
-                        className="buynow-button product-page-buy col-6 btn-continue text-center"
-                    >
-                        Continue
-                    </button>
+                            <button
+                                onClick={handlePayment}
+                                className="buynow-button product-page-buy col-6 btn-continue text-center"
+                            >
+                                Continue
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
 
             <Modal
-
                 show={showModal}
                 onHide={handleCloseModal}
                 centered
@@ -230,12 +228,8 @@ const Payment = () => {
                 <Modal.Header closeButton>
                     <Modal.Title>Payment Confirmation</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="d-flex flex-column align-items-center" >
-                    <img style={{width:'100%'}}
-                        src="/assets/payments/qr.jpeg"
-                        alt="QR Code"
-                        className="qr-image"
-                    />
+                <Modal.Body className="d-flex flex-column align-items-center">
+                    {/* Modal content here */}
                 </Modal.Body>
                 <Modal.Footer className="d-flex justify-content-between">
                     <Button variant="secondary" onClick={handleCloseModal}>
