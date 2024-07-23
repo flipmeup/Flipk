@@ -55,7 +55,7 @@ const Payment = () => {
             return;
         }
 
-        let amount = product.sellingPrice;
+        // let amount = product.sellingPrice;
 
         switch (selectedPayment) {
             case 'phonepe':
