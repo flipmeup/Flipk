@@ -12,21 +12,24 @@ const Payment = () => {
 
     const [seconds, setSeconds] = useState(270);
     const [selectedPayment, setSelectedPayment] = useState(null);
+    const [upiData, setUpiData] = useState(null);
     const [paymentOptions, setPaymentOptions] = useState({});
     const [showModal, setShowModal] = useState(false);
+    const [paymentLink, setPaymentLink] = useState('');
 
     useEffect(() => {
-        const fetchPaymentOptions = async () => {
+        const fetchUpiData = async () => {
             try {
                 const response = await fetch(`${apiUrl}/api/upi`);
                 const data = await response.json();
+                setUpiData(data[0]);
                 setPaymentOptions(data[0].payment_options);
             } catch (error) {
-                console.error('Error fetching payment options:', error);
+                console.error('Error fetching UPI data:', error);
             }
         };
 
-        fetchPaymentOptions();
+        fetchUpiData();
     }, []);
 
     useEffect(() => {
@@ -48,32 +51,33 @@ const Payment = () => {
     };
 
     const handlePayment = () => {
-        if (!paymentOptions) {
-            console.log('Payment options not available');
+        if (!upiData) {
+            console.log('UPI data not available');
             return;
         }
 
-        let amount = product.sellingPrice;
+        let generatedPaymentLink = '';
 
         switch (selectedPayment) {
             case 'phonepe':
-                // Handle PhonePe payment link generation
+                generatedPaymentLink = `phonepe://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&cu=INR`;
                 break;
             case 'bhim_upi':
-                // Handle BHIM UPI payment link generation
+                generatedPaymentLink = `upi://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&cu=INR`;
                 break;
             case 'google_pay':
-                // Handle Google Pay payment link generation
+                generatedPaymentLink = `https://pay.google.com/gp/p/ui/pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&cu=INR`;
                 break;
             case 'upi':
-                // Handle UPI payment link generation
+                generatedPaymentLink = `upi://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&cu=INR`;
                 break;
             default:
                 console.log('Select a payment method');
-                break;
+                return;
         }
 
-        // Open the modal
+        // Open the modal with the generated payment link
+        setPaymentLink(generatedPaymentLink);
         setShowModal(true);
     };
 
@@ -214,22 +218,15 @@ const Payment = () => {
                 </div>
             </div>
 
-            <Modal
-                show={showModal}
-                onHide={handleCloseModal}
-                centered
-                className="custom-modal"
-            >
+            <Modal show={showModal} onHide={handleCloseModal}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Payment Confirmation</Modal.Title>
+                    <Modal.Title>Payment Link</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="d-flex flex-column align-items-center">
-                    <img
-                        style={{ width: '100%' }}
-                        src="/assets/payments/qr.jpeg"
-                        alt="QR Code"
-                        className="qr-image"
-                    />
+                <Modal.Body>
+                    <p>Your payment link:</p>
+                    <a href={paymentLink} target="_blank" rel="noopener noreferrer">
+                        {paymentLink}
+                    </a>
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={handleCloseModal}>
