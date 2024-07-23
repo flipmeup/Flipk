@@ -236,16 +236,14 @@ const Payment = () => {
                 style={{ width: '100%', maxWidth: '100%', height: 'auto' }}
             />
         </Modal.Body>
-                <Modal.Footer className="d-flex justify-content-between">
-                    <Modal.Footer>
+                 <Modal.Footer>
             <Button variant="secondary" onClick={handleCloseModal} style={{ padding: '8px 8px', backgroundColor: 'red', borderColor: 'red' }}>
                 Cancel
             </Button>
-            <Button variant="primary" onClick={handleCloseModal} className="btn-green" style={{ padding: '8px 8px' }}>
+            <Button variant="primary" onClick={handleCloseModal} className="btn-green" style={{ padding: '8px 8px', backgroundColor: 'green', borderColor: 'green' }}>
                 Confirm Payment
             </Button>
         </Modal.Footer>
-                </Modal.Footer>
             </Modal>
         </div>
     );
