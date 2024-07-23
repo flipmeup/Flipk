@@ -229,15 +229,22 @@ const Payment = () => {
                     <Modal.Title>Payment Confirmation</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="d-flex flex-column align-items-center">
-<img src="assets/payments/qr.jpeg" className="modalImage"
-">                </Modal.Body>
+            {/* Modal content here */}
+            <img 
+                src="assets/payments/qr.jpeg" 
+                alt="QR Code" 
+                style={{ width: '100%', maxWidth: '100%', height: 'auto' }}
+            />
+        </Modal.Body>
                 <Modal.Footer className="d-flex justify-content-between">
-                    <Button  onClick={handleCloseModal} classname="modalb-1">
-                        Cancel
-                    </Button>
-                    <Button  onClick={handleCloseModal} className="modalb-2">
-                        Confirm Payment
-                    </Button>
+                    <Modal.Footer>
+            <Button variant="secondary" onClick={handleCloseModal} style={{ padding: '8px 8px', backgroundColor: 'red', borderColor: 'red' }}>
+                Cancel
+            </Button>
+            <Button variant="primary" onClick={handleCloseModal} className="btn-green" style={{ padding: '8px 8px' }}>
+                Confirm Payment
+            </Button>
+        </Modal.Footer>
                 </Modal.Footer>
             </Modal>
         </div>
