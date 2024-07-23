@@ -82,3 +82,18 @@
 #easy{
     margin-bottom: 80px;
 }
+.modal-content {
+    border: none !important;
+    background-color: white !important;
+    width: 400px !important;
+    padding: 20px !important;
+    border-radius: 5px !important;
+    text-align: center !important;
+}
+
+.modal-content button {
+    margin: 0 10px;
+    background-color: green !important;
+    color: white ;
+    font-weight: 600 ;
+}
