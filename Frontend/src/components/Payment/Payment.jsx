@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import PaymentNav from '../PaymentNav/PaymentNav';
 import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Payment.css'; // Ensure this file contains the updated CSS
+import './Payment.css'; // Make sure this file contains the updated CSS
 import apiUrl from '../../config';
 
 const Payment = () => {
@@ -57,26 +57,27 @@ const Payment = () => {
         }
 
         let generatedPaymentLink = '';
+        let amount = product.sellingPrice;
 
         switch (selectedPayment) {
             case 'phonepe':
-                generatedPaymentLink = `phonepe://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&cu=INR`;
+                generatedPaymentLink = `phonepe://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&am=${amount}&cu=INR`;
                 break;
             case 'bhim_upi':
-                generatedPaymentLink = `upi://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&cu=INR`;
+                generatedPaymentLink = `upi://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&am=${amount}&cu=INR`;
                 break;
             case 'google_pay':
-                generatedPaymentLink = `https://pay.google.com/gp/p/ui/pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&cu=INR`;
+                generatedPaymentLink = `https://pay.google.com/gp/p/ui/pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&am=${amount}&cu=INR`;
                 break;
             case 'upi':
-                generatedPaymentLink = `upi://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&cu=INR`;
+                generatedPaymentLink = `upi://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&am=${amount}&cu=INR`;
                 break;
             default:
                 console.log('Select a payment method');
-                return;
+                break;
         }
 
-        // Open the modal with the generated payment link
+        // Open the modal without using the payment link
         setPaymentLink(generatedPaymentLink);
         setShowModal(true);
     };
@@ -176,7 +177,8 @@ const Payment = () => {
                             >
                                 <label className="form-check-label">
                                     <img
-                                        src="/assets/payments/qr.jpeg"
+                                        src="/assets/payments/qr.jpeg
+                                        "
                                         className="pay-logo"
                                         alt="button"
                                     />
@@ -207,30 +209,40 @@ const Payment = () => {
                             </span>
                         </div>
                         <div className="my-4 mx-0 text-center">
-                            <button
-                                onClick={handlePayment}
-                                className="buynow-button product-page-buy col-6 btn-continue text-center"
-                            >
-                                Continue
-                            </button>
+                        <button
+                        onClick={handlePayment}
+                        className="buynow-button product-page-buy col-6 btn-continue text-center"
+                    >
+                        Continue
+                    </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal
+
+                show={showModal}
+                onHide={handleCloseModal}
+                centered
+                className="custom-modal"
+            >
                 <Modal.Header closeButton>
-                    <Modal.Title>Payment Link</Modal.Title>
+                    <Modal.Title>Payment Confirmation</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <p>Your payment link:</p>
-                    <a href={paymentLink} target="_blank" rel="noopener noreferrer">
-                        {paymentLink}
-                    </a>
+                <Modal.Body className="d-flex flex-column align-items-center" >
+                    <img style={{width:'100%'}}
+                        src="/assets/payments/qr.jpeg"
+                        alt="QR Code"
+                        className="qr-image"
+                    />
                 </Modal.Body>
-                <Modal.Footer>
+                <Modal.Footer className="d-flex justify-content-between">
                     <Button variant="secondary" onClick={handleCloseModal}>
-                        Close
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={handleCloseModal} className="btn-green">
+                        Confirm Payment
                     </Button>
                 </Modal.Footer>
             </Modal>
