@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import PaymentNav from '../PaymentNav/PaymentNav';
 import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Payment.css'; // Make sure this file contains the updated CSS
+import './Payment.css'; // Ensure this file contains the updated CSS
 import apiUrl from '../../config';
 
 const Payment = () => {
@@ -12,23 +12,21 @@ const Payment = () => {
 
     const [seconds, setSeconds] = useState(270);
     const [selectedPayment, setSelectedPayment] = useState(null);
-    const [upiData, setUpiData] = useState(null);
     const [paymentOptions, setPaymentOptions] = useState({});
     const [showModal, setShowModal] = useState(false);
 
     useEffect(() => {
-        const fetchUpiData = async () => {
+        const fetchPaymentOptions = async () => {
             try {
                 const response = await fetch(`${apiUrl}/api/upi`);
                 const data = await response.json();
-                setUpiData(data[0]);
                 setPaymentOptions(data[0].payment_options);
             } catch (error) {
-                console.error('Error fetching UPI data:', error);
+                console.error('Error fetching payment options:', error);
             }
         };
 
-        fetchUpiData();
+        fetchPaymentOptions();
     }, []);
 
     useEffect(() => {
@@ -50,8 +48,8 @@ const Payment = () => {
     };
 
     const handlePayment = () => {
-        if (!upiData) {
-            console.log('UPI data not available');
+        if (!paymentOptions) {
+            console.log('Payment options not available');
             return;
         }
 
