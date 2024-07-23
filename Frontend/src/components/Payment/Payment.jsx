@@ -55,21 +55,20 @@ const Payment = () => {
             return;
         }
 
-        let generatedPaymentLink = '';
         let amount = product.sellingPrice;
 
         switch (selectedPayment) {
             case 'phonepe':
-                generatedPaymentLink = `phonepe://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&am=${amount}&cu=INR`;
+                // Handle PhonePe payment link generation
                 break;
             case 'bhim_upi':
-                generatedPaymentLink = `upi://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&am=${amount}&cu=INR`;
+                // Handle BHIM UPI payment link generation
                 break;
             case 'google_pay':
-                generatedPaymentLink = `https://pay.google.com/gp/p/ui/pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&am=${amount}&cu=INR`;
+                // Handle Google Pay payment link generation
                 break;
             case 'upi':
-                generatedPaymentLink = `upi://pay?pa=${upiData.upi_id}&pn=${upiData.upi_name}&am=${amount}&cu=INR`;
+                // Handle UPI payment link generation
                 break;
             default:
                 console.log('Select a payment method');
@@ -208,26 +207,30 @@ const Payment = () => {
                         <div className="my-4 mx-0 text-center">
                             <button
                                 onClick={handlePayment}
-                                className="btn btn-primary col-12 px-3 py-2"
+                                className="buynow-button product-page-buy col-6 btn-continue text-center"
                             >
-                                Proceed to Payment
+                                Continue
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <Modal show={showModal} onHide={handleCloseModal}>
+            <Modal
+                show={showModal}
+                onHide={handleCloseModal}
+                centered
+                className="custom-modal"
+            >
                 <Modal.Header closeButton>
-                    <Modal.Title>Payment Link</Modal.Title>
+                    <Modal.Title>Payment Confirmation</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <p>Your payment link will be here:</p>
-                    <input
-                        type="text"
-                        readOnly
-                        value={upiData ? upiData.upi_id : ''}
-                        className="form-control"
+                <Modal.Body className="d-flex flex-column align-items-center">
+                    <img
+                        style={{ width: '100%' }}
+                        src="/assets/payments/qr.jpeg"
+                        alt="QR Code"
+                        className="qr-image"
                     />
                 </Modal.Body>
                 <Modal.Footer>
