@@ -3,7 +3,7 @@ import { useLocation } from 'react-router-dom';
 import PaymentNav from '../PaymentNav/PaymentNav';
 import { Modal, Button } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './Payment.css'; // Make sure this file contains the updated CSS
+import './Payment.css'; // Ensure this path is correct
 import apiUrl from '../../config';
 
 const Payment = () => {
@@ -26,19 +26,18 @@ const Payment = () => {
             } catch (error) {
                 console.error('Error fetching UPI data:', error);
             }
-	@@ -31,55 +30,65 @@ const Payment = () => {
+        };
+
         fetchUpiData();
     }, []);
 
     useEffect(() => {
         const timer = setInterval(() => {
-            if (seconds > 0) {
-                setSeconds(prevSeconds => prevSeconds - 1);
-            }
+            setSeconds(prevSeconds => prevSeconds > 0 ? prevSeconds - 1 : 0);
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [seconds]);
+    }, []);
 
     const handlePaymentSelection = (paymentType) => {
         setSelectedPayment(paymentType);
@@ -54,35 +53,17 @@ const Payment = () => {
             return;
         }
 
-        // let amount = product.sellingPrice;
-
-        switch (selectedPayment) {
-            case 'phonepe':
-                // Example payment link generation (removed setting paymentLink)
-                console.log('PhonePe selected');
-                break;
-            case 'bhim_upi':
-                // Example payment link generation (removed setting paymentLink)
-                console.log('BHIM UPI selected');
-                break;
-            case 'google_pay':
-                // Example payment link generation (removed setting paymentLink)
-                console.log('Google Pay selected');
-                break;
-            case 'upi':
-                // Example payment link generation (removed setting paymentLink)
-                console.log('UPI selected');
-                break;
-            default:
-                console.log('Select a payment method');
-                break;
-        }
+        // Implement payment handling logic
+        console.log(`${selectedPayment} selected`);
 
         setShowModal(true);
     };
 
     if (!product) {
-	@@ -90,161 +99,72 @@ const Payment = () => {
+        return <div>No product available</div>;
+    }
+
+    return (
         <div>
             <PaymentNav title={"Payments"} />
             <div className="card pt-3">
@@ -139,7 +120,7 @@ const Payment = () => {
                                     <img
                                         src="/assets/payments/bhim.webp"
                                         className="pay-logo"
-                                        alt="button"
+                                        alt="BHIM UPI"
                                     />
                                     <span className="unaviablee mx-4">BHIM UPI</span>
                                 </label>
@@ -157,7 +138,7 @@ const Payment = () => {
                                     <img
                                         src="/assets/payments/googlepay.png"
                                         className="pay-logo"
-                                        alt="button"
+                                        alt="Google Pay"
                                     />
                                     <span className="unaviablee mx-4">Google Pay</span>
                                 </label>
@@ -175,7 +156,7 @@ const Payment = () => {
                                     <img
                                         src="/assets/payments/qr.jpeg"
                                         className="pay-logo"
-                                        alt="button"
+                                        alt="QR Code"
                                     />
                                     <span className="unaviablee mx-4">QR</span>
                                 </label>
@@ -225,23 +206,24 @@ const Payment = () => {
                     <Modal.Title>Payment Confirmation</Modal.Title>
                 </Modal.Header>
                 <Modal.Body className="d-flex flex-column align-items-center">
-            {/* Modal content here */}
-            <img 
-                src="assets/payments/qr.jpeg" 
-                alt="QR Code" 
-                style={{ width: '100%', maxWidth: '100%', height: 'auto' }}
-            />
-        </Modal.Body>
-                 <Modal.Footer>
-            <Button variant="secondary" onClick={handleCloseModal} style={{ padding: '8px 8px', backgroundColor: 'red', borderColor: 'red' }}>
-                Cancel
-            </Button>
-            <Button variant="primary" onClick={handleCloseModal} className="btn-green" style={{ padding: '8px 8px', backgroundColor: 'green', borderColor: 'green' }}>
-                Confirm Payment
-            </Button>
-        </Modal.Footer>
+                    {/* Modal content here */}
+                    <img 
+                        src="/assets/payments/qr.jpeg" 
+                        alt="QR Code" 
+                        style={{ width: '100%', maxWidth: '100%', height: 'auto' }}
+                    />
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal} style={{ padding: '8px 8px', backgroundColor: 'red', borderColor: 'red' }}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={handleCloseModal} className="btn-green" style={{ padding: '8px 8px', backgroundColor: 'green', borderColor: 'green' }}>
+                        Confirm Payment
+                    </Button>
+                </Modal.Footer>
             </Modal>
         </div>
     );
 };
-        export default Payment;
+
+export default Payment;
