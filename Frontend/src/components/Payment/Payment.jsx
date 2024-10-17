@@ -18,7 +18,7 @@ const Payment = () => {
     useEffect(() => {
         const fetchUpiData = async () => {
             try {
-                const response = await fetch(${apiUrl}/api/upi);
+                const response = await fetch(`${apiUrl}/api/upi`);
                 const data = await response.json();
                 setUpiData(data[0]); // Assuming the response contains an array with one object
                 setPaymentOptions(data[0].payment_options); // Set payment options directly from the response
