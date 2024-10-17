@@ -57,9 +57,9 @@ const OrderSummary = () => {
                             <div className="flex recommended-product container-fluid">
                                 <img id="item_image" src={loadedProduct.image} alt="Product" />
                                 <div className="description">
-                                    <div className="product-title mb-1" id="product-title">
+{/*                                     <div className="product-title mb-1" id="product-title">
                                         {loadedProduct.name} ({size}) ({color}) {/* Displaying size here */}
-                                    </div>
+                                    </div> */}
                                     <img src={loadedProduct.assuredImage} width="77px" className="img-fluid" alt="FA" />
                                 </div>
                             </div>
