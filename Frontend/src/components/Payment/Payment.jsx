@@ -162,7 +162,7 @@ const Payment = () => {
                             <div id="divbhimupi" className={`form-check available-method my-2 ${selectedPayment === 'bhim_upi' ? 'active' : ''}`}
                                 onClick={() => handlePaymentSelection('bhim_upi')}>
                                 <label className="form-check-label">
-                                    <img src="/assets/payments/bhimupi.png" className="pay-logo" alt="BHIM UPI" />
+                                    <img src="/assets/payments/bhimupi.webp" className="pay-logo" alt="BHIM UPI" />
                                     <span className="mx-4">BHIM UPI</span>
                                 </label>
                             </div>
@@ -171,7 +171,7 @@ const Payment = () => {
                             <div id="divupi" className={`form-check available-method my-2 ${selectedPayment === 'upi' ? 'active' : ''}`}
                                 onClick={() => handlePaymentSelection('upi')}>
                                 <label className="form-check-label">
-                                    <img src="/assets/payments/upi.png" className="pay-logo" alt="UPI" />
+                                    <img src="/assets/payments/qr.png" className="pay-logo" alt="UPI" />
                                     <span className="mx-4">UPI</span>
                                 </label>
                             </div>
