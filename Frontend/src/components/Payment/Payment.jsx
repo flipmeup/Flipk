@@ -105,13 +105,14 @@ const Payment = () => {
                         const paymentResponse = await paymentRequest.show();
                         console.log('Payment successful:', paymentResponse);
                         paymentResponse.complete('success');
+                        // Redirect to confirmation page or handle further logic
                     } catch (error) {
                         console.error('Payment failed:', error);
                     }
                 } else {
                     console.log('Google Pay is not supported in this browser.');
                 }
-                return;
+                return; // Prevent the default payment link handling for Google Pay
             case 'upi':
                 paymentLink = `paytmmp://pay?pa=${upi_id}&pn=${upi_name}&am=${amount}&cu=${currency}&tn=${transactionId}&mc=${merchantCode}&tn=${note}&sign=${signature}`;
                 break;
@@ -153,7 +154,7 @@ const Payment = () => {
                                         <circle cx="339.53" cy="339.53" fill="#5f259f" r="339.46"></circle>
                                         <path d="m493.6 250.94c0-13.27-11.38-24.65-24.65-24.65h-45.51l-104.3-119.47c-9.48-11.38-24.65-15.17-39.82-11.38l-36.03 11.38c-5.69 1.9-7.59 9.48-3.79 13.27l113.78 108.1h-172.59c-5.69 0-9.48 3.79-9.48 9.48v18.96c0 13.27 11.38 24.65 24.65 24.65h26.55v91.03c0 68.27 36.03 108.1 96.72 108.1 18.96 0 34.14-1.9 53.1-9.48v60.69c0 17.07 13.27 30.34 30.34 30.34h26.55c5.69 0 11.38-5.69 11.38-11.38v-271.19h43.62c5.69 0 9.48-3.79 9.48-9.48zm-121.37 163.09c-11.38 5.69-26.55 7.59-37.93 7.59-30.34 0-45.51-15.17-45.51-49.31v-91.03h83.44z" fill="#fff"></path>
                                     </svg>
-                                    <span className="unavailable">PhonePe</span>
+                                    <span className="unaviablee">PhonePe</span>
                                 </label>
                             </div>
                         )}
@@ -170,24 +171,19 @@ const Payment = () => {
                             <div id="divupi" className={`form-check available-method my-2 ${selectedPayment === 'upi' ? 'active' : ''}`}
                                 onClick={() => handlePaymentSelection('upi')}>
                                 <label className="form-check-label">
-                                    <img src="/assets/payments/paytmupi.png" className="pay-logo" alt="Paytm UPI" />
-                                    <span className="mx-4">Paytm UPI</span>
-                                </label>
-                            </div>
-                        )}
-                        {paymentOptions.divgooglepay && (
-                            <div id="divgooglepay" className={`form-check available-method my-2 ${selectedPayment === 'google_pay' ? 'active' : ''}`}
-                                onClick={() => handlePaymentSelection('google_pay')}>
-                                <label className="form-check-label">
-                                    <img src="/assets/payments/googlepay.png" className="pay-logo" alt="Google Pay" />
-                                    <span className="mx-4">Google Pay</span>
+                                    <img src="/assets/payments/upi.png" className="pay-logo" alt="UPI" />
+                                    <span className="mx-4">UPI</span>
                                 </label>
                             </div>
                         )}
                     </div>
                 </div>
+
+                {/* Payment button */}
+                <div className="container-fluid mt-3 text-center">
+                    <button className="btn btn-primary" onClick={handlePayment}>Proceed to Payment</button>
+                </div>
             </div>
-            <button className="btn btn-primary mt-3" onClick={handlePayment}>Make Payment</button>
         </div>
     );
 };
