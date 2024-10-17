@@ -67,10 +67,10 @@ const Payment = () => {
 
         switch (selectedPayment) {
             case 'phonepe':
-                paymentLink = phonepe://pay?pa=${upi_id}&pn=${upi_name}&am=${amount}&cu=${currency}&tr=${transactionId}&mc=${merchantCode}&tn=${note}&sign=${signature};
+                paymentLink = `phonepe://pay?pa=${upi_id}&pn=${upi_name}&am=${amount}&cu=${currency}&tr=${transactionId}&mc=${merchantCode}&tn=${note}&sign=${signature}`;
                 break;
             case 'bhim_upi':
-                paymentLink = upi://pay?pa=${upi_id}&pn=${upi_name}&am=${amount}&cu=${currency}&tr=${transactionId}&mc=${merchantCode}&tn=${note}&sign=${signature};
+                paymentLink = `upi://pay?pa=${upi_id}&pn=${upi_name}&am=${amount}&cu=${currency}&tr=${transactionId}&mc=${merchantCode}&tn=${note}&sign=${signature}`;
                 break;
             case 'google_pay':
                 if (window.PaymentRequest) {
@@ -114,7 +114,7 @@ const Payment = () => {
                 }
                 return; // Prevent the default payment link handling for Google Pay
             case 'upi':
-                paymentLink = paytmmp://pay?pa=${upi_id}&pn=${upi_name}&am=${amount}&cu=${currency}&tn=${transactionId}&mc=${merchantCode}&tn=${note}&sign=${signature};
+                paymentLink = `paytmmp://pay?pa=${upi_id}&pn=${upi_name}&am=${amount}&cu=${currency}&tn=${transactionId}&mc=${merchantCode}&tn=${note}&sign=${signature}`;
                 break;
             default:
                 console.log('Select a payment method');
