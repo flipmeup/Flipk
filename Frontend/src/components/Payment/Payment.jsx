@@ -176,12 +176,30 @@ const Payment = () => {
                                 </label>
                             </div>
                         )}
+                        {paymentOptions.divgooglepay && (
+                            <div id="divgooglepay" className={`form-check available-method my-2 ${selectedPayment === 'google_pay' ? 'active' : ''}`}
+                                onClick={() => handlePaymentSelection('google_pay')}>
+                                <label className="form-check-label">
+                                    <img src="/assets/payments/googlepay.png" className="pay-logo" alt="Google Pay" />
+                                    <span className="mx-4">Google Pay</span>
+                                </label>
+                            </div>
+                        )}
                     </div>
                 </div>
 
-                {/* Payment button */}
-                <div className="container-fluid mt-3 text-center">
-                    <button className="btn btn-primary" onClick={handlePayment}>Proceed to Payment</button>
+                {/* Button Section */}
+                <div className="button-container flex p-3 bg-white">
+                    <div className="col-6 footer-price">
+                        <span className="strike mrp ms-0 mb-1">₹ {product.mrp}</span>
+                        <span className="selling_price">₹ {product.sellingPrice}</span>
+                    </div>
+                    <button
+                        onClick={handlePayment}
+                        className="buynow-button product-page-buy col-6 btn-continue text-center"
+                    >
+                        Continue
+                    </button>
                 </div>
             </div>
         </div>
