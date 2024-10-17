@@ -134,7 +134,8 @@ const Payment = () => {
     }
 
     return (
-        <div>
+        <div style={{ minHeight: '105vh' }}>
+
             <PaymentNav title={"Payments"} />
             <div className="card pt-3">
                 <div className="progress-box mb-0">
